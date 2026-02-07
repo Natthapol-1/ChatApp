@@ -14,8 +14,52 @@ datasource db {
 }
 
 model Message {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid()) // Changed to UUID
   content   String
-  sender    String
   createdAt DateTime @default(now())
+  
+  // Relations
+  userId    String   // Must match User.id type
+  user      User     @relation(fields: [userId], references: [id])
+  
+  roomId    String   // Must match Room.id type
+  room      Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+}
+
+model Room {
+  id        String       @id @default(uuid()) // Changed to UUID
+  name      String
+  createdAt DateTime     @default(now())
+  
+  // Relations
+  messages  Message[]
+  members   RoomMember[] 
+}
+
+model RoomMember {
+  id        String   @id @default(uuid()) // Changed to UUID
+  role      String   @default("MEMBER") 
+  joinedAt  DateTime @default(now())
+
+  // Links
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+
+  roomId    String
+  room      Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, roomId])
+}
+
+model User {
+  id        String       @id @default(uuid()) // Changed to UUID
+  clerkId   String       @unique
+  name      String
+  email     String
+  image     String?
+  createdAt DateTime     @default(now())
+
+  // Relations
+  messages  Message[]
+  rooms     RoomMember[] 
 }
