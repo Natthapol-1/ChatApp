@@ -23,7 +23,7 @@ export default function RoomsList({ rooms }: { rooms: Room[] }) {
         >
           {/* Main Link Area */}
           <Link
-            href={`/chat/${room.id}`}
+            href={`/room/${room.id}`}
             className="flex-1 flex items-center p-5 gap-4 min-w-0"
           >
             <div className="bg-blue-600/10 p-3 rounded-xl">

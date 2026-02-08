@@ -13,6 +13,12 @@ datasource db {
   provider = "postgresql"
 }
 
+enum Role {
+  USER
+  ADMIN
+  MODERATOR
+}
+
 model Message {
   id        String   @id @default(uuid()) // Changed to UUID
   content   String
@@ -30,7 +36,7 @@ model Room {
   id        String       @id @default(uuid()) // Changed to UUID
   name      String
   createdAt DateTime     @default(now())
-  
+  inviteCode String @unique @default(uuid())
   // Relations
   messages  Message[]
   members   RoomMember[] 
@@ -38,7 +44,7 @@ model Room {
 
 model RoomMember {
   id        String   @id @default(uuid()) // Changed to UUID
-  role      String   @default("MEMBER") 
+  role      Role     @default(USER)
   joinedAt  DateTime @default(now())
 
   // Links
